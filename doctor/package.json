@@ -1,0 +1,22 @@
+{
+  "name": "doctor",
+  "version": "0.0.0",
+  "description": "",
+  "author": "pwnclub <acegorov7@gmail.com>",
+  "main": "functions/__main__.js",
+  "dependencies": {
+    "lib": "^3.0.1",
+    "request": "^2.83.0"
+  },
+  "private": true,
+  "stdlib": {
+    "build": "faaslang",
+    "name": "pwnclub/doctor",
+    "timeout": 10000,
+    "publish": true,
+    "personalize": {
+      "keys": [],
+      "user": []
+    }
+  }
+}
