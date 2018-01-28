@@ -17,7 +17,7 @@ module.exports = (_issue, context, callback) => {
     let url = `${URL_BASE}${URL_TYPE.issues}${URL_TOKEN}${URL_LANG}${URL_FORMAT}`;
     helper.get_issue_id (_issue, url, id => {
         url = `${URL_BASE}issues/${id}/info?${URL_TOKEN}${URL_LANG}${URL_FORMAT}`;
-        helper.get_treatment_info(id, url, info => {
+        helper.get_description(id, url, info => {
             callback(null, info);
         })
     });

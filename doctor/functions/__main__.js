@@ -11,6 +11,7 @@ let URL_TYPE = { symptoms: `symptoms?`, diagnosis: `diagnosis?`};
 
 function get_diagnosis (url, callback) {
     request(url, (err, res, body) => {
+        if (err) console.log(err);
         const diagnosis = JSON.parse(body);
         callback(diagnosis);
     })
@@ -32,19 +33,21 @@ module.exports = (_sex, _age, _symptoms, context, callback) => {
     
     helper.get_symptoms_ids(symptoms, url, ids => {
         const id_string = helper.generate_id_string(ids);
+        console.log("ID STRING: " + id_string);
         const URL_SYMPTOMS = `symptoms=[${id_string}]&`;
         const URL_SEX = `gender=${_sex.trim()}&`;
         const URL_AGE = `year_of_birth=${Number(new Date().getFullYear()) - _age.trim()}&`;
         url = `${URL_BASE}${URL_TYPE.diagnosis}${URL_TOKEN}${URL_SYMPTOMS}${URL_SEX}${URL_AGE}${URL_LANG}${URL_FORMAT}`;
         console.log(url);
         get_diagnosis(url, body => {
-            console.log(body);
-            const names = [];
             
-            body.forEach(diagnosis => {
-                names.push(diagnosis.Issue.Name);
+            console.log(body);
+            let issues = [];
+            body.forEach(object => {
+                issues.push(object);
             })
-            callback(null, names);
+            
+            callback(null, issues);
         });
     })
 };
