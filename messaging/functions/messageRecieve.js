@@ -20,7 +20,7 @@ module.exports = async(sender, receiver, message, createdDatetime, context) => {
 
     //CHECK QUERY
     var mssg = message.toLowerCase();
-    var type_full = mssg.match(/(treat|diagnose|describe)(,*)/i);
+    var type_full = mssg.match(/(treatment for|treat|diagnose|describe)(,*)/i);
     var type = type_full[1];
     mssg = mssg.replace(type_full[0], '').trim();
     console.log(mssg);
@@ -60,11 +60,16 @@ module.exports = async(sender, receiver, message, createdDatetime, context) => {
             
             console.log(res);
             
-            let message_response = `I am ${res[0].Accuracy}% sure you have ${res[0].Name}.\nHowever, other possible issues worth looking in to are:\n\n`;
-            
-            for (var i = 1; i < 4; i++) {
-                message_response += `${i}. ${res[i].Name} (${Math.round(Number(res[i].Accuracy)*10)/10}%)\n`;
+            let message_response = `I am ${res[0].Accuracy}% sure you have ${res[0].Name}.\n`;
+            if (res.length > 1) {
+                message_response += `However, other possible issues worth looking in to are:\n\n`;
+                for (var i = 1; i < 3; i++) {
+                    if (res[i] != null)
+                        message_response += `${i}. ${res[i].Name} (${Math.round(Number(res[i].Accuracy)*10)/10}%)\n`;
+                }
             }
+            
+            console.log(message_response);
     
             //TEXT USER USING MESSAGEBIRD API
             let result = await lib.messagebird.tel.sms({
@@ -77,24 +82,25 @@ module.exports = async(sender, receiver, message, createdDatetime, context) => {
         // ----------
         // TREAT CASE
         // ----------
+        case 'treatment for':
         case 'treat': {
             console.log('sending sms treatment response: ' + pull);
         
             //PARSE
             var issue = mssg;
-            console.log(issuestr);
+            console.log(issue);
             
            // GET TREATMENT FROM DOCTOR API
             console.log('bouttadoitoem');
-            let res = await lib.pwnclub.doctor['@dev'].treatments({
-                _issue: issuestr, // (required)
+            let message_response = await lib.pwnclub.doctor['@dev'].treatments({
+                _issue: issue, // (required)
             });
             
             //SEND DIAGNOSES USING MESSAGEBIRD APIs
             let result = await lib.messagebird.tel.sms({
                 originator: receiver,
                 recipient: sender,
-                body: "Treatment Details: " + res + " at " + new Date()
+                body: "Treatment Details: " + message_response
             });
             break;
         }
