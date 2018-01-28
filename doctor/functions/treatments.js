@@ -8,11 +8,6 @@ const URL_LANG = `language=en-gb&`;
 const URL_FORMAT = `format=json`;
 const URL_TYPE = { issues: `issues?`, diagnosis: `diagnosis?`};
 
-
-function get_treatment_info (id, callback) {
-    
-}
-
 /**
 * A basic Hello World function
 * @param {string} _issue symptom to get treatment data for

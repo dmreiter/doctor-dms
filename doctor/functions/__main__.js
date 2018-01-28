@@ -36,6 +36,7 @@ module.exports = (_sex, _age, _symptoms, context, callback) => {
         const URL_SEX = `gender=${_sex.trim()}&`;
         const URL_AGE = `year_of_birth=${Number(new Date().getFullYear()) - _age.trim()}&`;
         url = `${URL_BASE}${URL_TYPE.diagnosis}${URL_TOKEN}${URL_SYMPTOMS}${URL_SEX}${URL_AGE}${URL_LANG}${URL_FORMAT}`;
+        console.log(url);
         get_diagnosis(url, body => {
             console.log(body);
             const names = [];
