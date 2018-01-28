@@ -5,7 +5,8 @@
   "author": "pwnclub <acegorov7@gmail.com>",
   "main": "functions/__main__.js",
   "dependencies": {
-    "lib": "^3.0.1"
+    "lib": "^3.0.1",
+    "request": "^2.83.0"
   },
   "private": true,
   "stdlib": {
