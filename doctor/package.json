@@ -1,6 +1,6 @@
 {
   "name": "doctor",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "",
   "author": "pwnclub <acegorov7@gmail.com>",
   "main": "functions/__main__.js",
