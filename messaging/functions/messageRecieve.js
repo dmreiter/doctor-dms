@@ -1,6 +1,14 @@
 const lib = require('lib')({ token: "5UnLEsAiOfs5PwuHeNs7rh2jh0y3aCBmNFgXB_bX5yHIeGjYAUXfWGoQMhDLA8RL" });
 const request = require('request')
 
+function generate_symptom_string(symptoms) {
+    let s_string = '';
+        symptoms.forEach((sym, index) => {
+           s_string += `&_symptoms[]="${sym}"`;
+        })
+    return s_string;
+}
+
 /**
  * @param {string} sender The phone number that sent the text to be handled
  * @param {string} receiver The StdLib phone number that received the SMS
@@ -8,7 +16,6 @@ const request = require('request')
  * @param {string} createdDatetime Datetime when the SMS was sent
  * @returns {string}
  */
-
 module.exports = async(sender, receiver, message, createdDatetime, context) => {
 
     //STORAGE (just testing)
@@ -23,6 +30,7 @@ module.exports = async(sender, receiver, message, createdDatetime, context) => {
     var type_full = mssg.match(/(treatment for|treat|diagnose|describe)(,*)/i);
     var type = type_full[1];
     mssg = mssg.replace(type_full[0], '').trim();
+    console.log(type);
     console.log(mssg);
     
     switch (type) {
@@ -60,22 +68,28 @@ module.exports = async(sender, receiver, message, createdDatetime, context) => {
             
             console.log(res);
             
-            let message_response = `I am ${res[0].Accuracy}% sure you have ${res[0].Name}.\n`;
+            let message_response = `I am ${res[0].Issue.Accuracy}% sure you have ${res[0].Issue.Name}.\n`;
             if (res.length > 1) {
                 message_response += `However, other possible issues worth looking in to are:\n\n`;
                 for (var i = 1; i < 3; i++) {
                     if (res[i] != null)
-                        message_response += `${i}. ${res[i].Name} (${Math.round(Number(res[i].Accuracy)*10)/10}%)\n`;
+                        message_response += `${i}. ${res[i].Issue.Name} (${Math.round(Number(res[i].Issue.Accuracy)*10)/10}%)\n`;
                 }
             }
             
             console.log(message_response);
-    
+            
+            let symptoms_string = generate_symptom_string(symptoms);
+            const url_age = `?_age=${age}`;
+            const url_sex = `&_sex=${sex}`;
+            const url_symptoms = `&_symptoms=${encodeURIComponent(JSON.stringify(symptoms))}`;
+            const webpage_url = `https://pwnclub.lib.id/deltahacks@dev/${url_age}${url_sex}${url_symptoms}`;
+            
             //TEXT USER USING MESSAGEBIRD API
             let result = await lib.messagebird.tel.sms({
                 originator: receiver,
                 recipient: sender,
-                body: message_response
+                body: `${message_response} \nTake a closer look here: ${webpage_url}`
             });
             break;
         }
@@ -102,6 +116,33 @@ module.exports = async(sender, receiver, message, createdDatetime, context) => {
                 recipient: sender,
                 body: "Treatment Details: " + message_response
             });
+            break;
+        }
+        // -------------
+        // DESCRIBE CASE
+        // -------------
+        case 'describe': {
+            console.log('sending sms describe response: ' + pull);
+            
+            //PARSE
+            var issue = mssg;
+            console.log(issue);
+            
+            // GET TREATMENT FROM DOCTOR API
+            console.log('bouttadoitoem');
+            let message_response = await lib.pwnclub.doctor['@dev'].describe({
+                _issue: issue, // (required)
+            });
+            
+            console.log("ASDADSADASDADS");
+            console.log(message_response);
+            
+            let result = await lib.messagebird.tel.sms({
+                originator: receiver,
+                recipient: sender,
+                body: "Illness Description: " + message_response
+            });
+            
             break;
         }
         default: {
