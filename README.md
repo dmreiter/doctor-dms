@@ -18,7 +18,7 @@ Want to try out our sandbox demo? Text **'Hello'** to **1+ 204 818 5344**
 
 | Diagnose | Describe | Treat |
 | --- | --- | --- |
-| ![Diagnose](gifs/diagnose.gif) | ![Describe](gifs/describe.gif) | ![Treat](gifs/treat.gif) |
+| ![Diagnose](diagnose.gif) | ![Describe](describe.gif) | ![Treat](treat.gif) |
 
 Our stack:
 ---
