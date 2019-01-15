@@ -32,5 +32,5 @@ Contributors
 ---
 Jayant Shrivastava (https://github.com/jayshrivastava)  
 Jason Xian  (https://github.com/JasonXian)  
-Alexander Egorov (acegorov7@gmail.com)  
+Alexander Egorov (https://github.com/pwnclub)
 Damian Reiter  (https://github.com/Damian-R)  
